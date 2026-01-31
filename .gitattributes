@@ -1,0 +1,12 @@
+* text=auto
+*.php diff=php
+*.md text
+*.yml text
+.editorconfig text
+.gitattributes text
+.gitignore text
+composer.json text
+phpunit.xml text
+phpstan.neon text
+pint.json text
+rector.php text
