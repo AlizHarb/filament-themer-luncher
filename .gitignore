@@ -18,3 +18,4 @@ rector-cache
 !/storage/app/theme-backups/.gitkeep
 /.phpstan_tmp
 /build
+/themes

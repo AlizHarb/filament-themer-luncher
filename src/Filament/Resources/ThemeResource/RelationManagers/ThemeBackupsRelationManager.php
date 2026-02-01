@@ -118,8 +118,8 @@ class ThemeBackupsRelationManager extends RelationManager
                     ->action(function (Collection $records): void {
                         $backupPath = config('themer-luncher.backups.path', storage_path('app/theme-backups'));
 
-                        /** @var Collection<int, ThemeBackup> $records */
-                        $records->each(function (ThemeBackup $record) use ($backupPath): void {
+                        $records->each(function (Model $record) use ($backupPath): void {
+                            /** @var ThemeBackup $record */
                             $path = $backupPath.DIRECTORY_SEPARATOR.$record->filename;
                             if (File::exists($path)) {
                                 File::delete($path);

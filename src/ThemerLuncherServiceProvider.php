@@ -22,7 +22,7 @@ final class ThemerLuncherServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/themer-luncher.php', 'themer-luncher');
 
-        $this->app->singleton(ThemeService::class, fn (): ThemeService => new ThemeService);
+        $this->app->singleton(ThemeService::class, fn (): ThemeService => new ThemeService());
     }
 
     /**
@@ -31,6 +31,8 @@ final class ThemerLuncherServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'themer-luncher');
+
+        app('router')->pushMiddlewareToGroup('web', \AlizHarb\ThemerLuncher\Http\Middleware\SetPreviewTheme::class);
 
         if ($this->app->runningInConsole()) {
             $this->publishes([

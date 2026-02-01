@@ -3,13 +3,12 @@
 use AlizHarb\ThemerLuncher\Filament\Resources\ThemeResource\Schemas\ThemeInfolist;
 use Filament\Schemas\Schema;
 
-/**
+/*
  * Unit Tests for ThemeInfolist
  *
  * Tests infolist schema configuration.
  */
 describe('ThemeInfolist Unit Tests', function () {
-
     it('can configure infolist schema', function () {
         $schema = Schema::make();
         $configured = ThemeInfolist::configure($schema);

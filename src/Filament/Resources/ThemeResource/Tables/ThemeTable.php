@@ -21,6 +21,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -56,6 +57,13 @@ final class ThemeTable
     protected static function getColumns(): array
     {
         return [
+            ImageColumn::make('screenshot_url')
+                ->label(__('themer-luncher::themes.fields.screenshot.label'))
+                ->circular()
+                ->disk('public')
+                ->visibility('public')
+                ->toggleable(),
+
             TextColumn::make('name')
                 ->label(__('themer-luncher::themes.fields.name.label'))
                 ->searchable()
@@ -136,6 +144,7 @@ final class ThemeTable
         return [
             ActionGroup::make([
                 self::activateAction(),
+                self::previewAction(),
                 self::viewAction(),
                 self::backupAction(),
                 self::restoreAction(),
@@ -161,7 +170,7 @@ final class ThemeTable
     /**
      * Create the theme activation action.
      */
-    protected static function activateAction(): Action
+    public static function activateAction(): Action
     {
         return Action::make('activate')
             ->label(__('themer-luncher::themes.actions.activate.label'))
@@ -183,6 +192,19 @@ final class ThemeTable
                         ->send();
                 }
             });
+    }
+
+    /**
+     * Create the theme preview action.
+     */
+    public static function previewAction(): Action
+    {
+        return Action::make('preview')
+            ->label(__('themer-luncher::themes.actions.preview.label'))
+            ->icon('heroicon-o-presentation-chart-bar')
+            ->color('info')
+            ->url(fn (Theme $record): string => url("/?preview_theme={$record->slug}"))
+            ->openUrlInNewTab();
     }
 
     /**
@@ -287,7 +309,7 @@ final class ThemeTable
             ->icon('heroicon-o-trash')
             ->color('danger')
             ->requiresConfirmation()
-            ->hidden(fn (Theme $record): bool => !$record->is_removeable)
+            ->hidden(fn (Theme $record): bool => ! $record->is_removeable)
             ->action(function (Theme $record, ThemeService $service): void {
                 try {
                     $service->delete($record->name);

@@ -19,7 +19,7 @@ final class ThemePolicy
      */
     public function viewAny(?Authenticatable $user): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -43,7 +43,7 @@ final class ThemePolicy
      */
     public function view(?Authenticatable $user, Theme $theme): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -67,7 +67,7 @@ final class ThemePolicy
      */
     public function create(?Authenticatable $user): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -91,7 +91,7 @@ final class ThemePolicy
      */
     public function update(?Authenticatable $user, Theme $theme): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -115,7 +115,7 @@ final class ThemePolicy
      */
     public function delete(?Authenticatable $user, Theme $theme): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -139,7 +139,7 @@ final class ThemePolicy
      */
     public function activate(?Authenticatable $user, Theme $theme): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -163,7 +163,7 @@ final class ThemePolicy
      */
     public function backup(?Authenticatable $user, Theme $theme): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -187,7 +187,7 @@ final class ThemePolicy
      */
     public function restore(?Authenticatable $user, Theme $theme): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 

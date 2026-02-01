@@ -21,7 +21,7 @@ test('it correctly identifies the active theme', function () {
 });
 
 test('it has the expected schema', function () {
-    $theme = new Theme;
+    $theme = new Theme();
 
     expect($theme->getRows())->toBeArray();
 });

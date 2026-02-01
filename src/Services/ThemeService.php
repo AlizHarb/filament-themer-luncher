@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AlizHarb\ThemerLuncher\Services;
 
-use AlizHarb\Themer\Facades\Theme as ThemeFacade;
 use AlizHarb\ThemerLuncher\Data\InstallThemeData;
 use AlizHarb\ThemerLuncher\Exceptions\ThemeInstallationException;
 use AlizHarb\ThemerLuncher\Exceptions\ThemeOperationException;
@@ -24,35 +23,13 @@ final class ThemeService
 {
     /**
      * Activate a theme.
-     *
-     * @throws ThemeOperationException
      */
     public function activate(string $name): void
     {
-        try {
-            if (empty($name)) {
-                // Deactivate by setting no active theme
-                // We use a blank string if the facade supports it, or handle it gracefully
-                try {
-                    ThemeFacade::set('');
-                } catch (\Exception $e) {
-                    // Fallback to manual reset if set('') is not supported
-                    $manager = app(\AlizHarb\Themer\ThemeManager::class);
-                    $reflection = new \ReflectionClass($manager);
-                    $property = $reflection->getProperty('activeTheme');
-                    $property->setAccessible(true);
-                    $property->setValue($manager, null);
-                }
-
-                return;
-            }
-
-            ThemeFacade::set($name);
-        } catch (\Exception $e) {
-            if (!empty($name)) {
-                throw ThemeOperationException::activationFailed($name, $e->getMessage());
-            }
-        }
+        Artisan::call('theme:activate', [
+            'theme' => $name,
+            '--no-interaction' => true,
+        ]);
     }
 
     /**
@@ -63,13 +40,13 @@ final class ThemeService
      */
     public function install(InstallThemeData $data): void
     {
-        if (!config('themer-luncher.installation.enabled', true)) {
+        if (! config('themer-luncher.installation.enabled', true)) {
             throw ThemeOperationNotSupportedException::make('installation');
         }
 
         $allowedSources = config('themer-luncher.installation.allowed_sources', ['zip', 'url', 'git', 'local']);
 
-        if (!in_array($data->source_type, $allowedSources, true)) {
+        if (! in_array($data->source_type, $allowedSources, true)) {
             throw ThemeInstallationException::invalidSource($data->source_type);
         }
 
@@ -97,19 +74,27 @@ final class ThemeService
     }
 
     /**
+     * Preview a theme (stored in session).
+     */
+    public function preview(string $name): void
+    {
+        session(['preview_theme' => $name]);
+    }
+
+    /**
      * Install theme from ZIP file.
      *
-     * @param  string|null  $filePath  The absolute path to the ZIP file.
+     * @param string|null $filePath the absolute path to the ZIP file
      *
-     * @throws ThemeInstallationException If validation or extraction fails.
+     * @throws ThemeInstallationException if validation or extraction fails
      */
     protected function installFromZip(?string $filePath): void
     {
-        if (!$filePath || !file_exists($filePath)) {
+        if (! $filePath || ! file_exists($filePath)) {
             throw ThemeInstallationException::extractionFailed($filePath ?? 'null', 'File not found');
         }
 
-        $zip = new ZipArchive;
+        $zip = new ZipArchive();
 
         if ($zip->open($filePath) !== true) {
             throw ThemeInstallationException::extractionFailed($filePath, 'Cannot open ZIP file');
@@ -118,7 +103,7 @@ final class ThemeService
         $themesPath = config('themer.themes_path', base_path('themes'));
 
         // @phpstan-ignore-next-line
-        if (!File::isDirectory($themesPath)) {
+        if (! File::isDirectory($themesPath)) {
             File::makeDirectory($themesPath, 0755, true);
         }
 
@@ -131,7 +116,7 @@ final class ThemeService
         // Find theme.json in extracted files
         $themeJsonPath = $this->findThemeJson($tempPath);
 
-        if (!$themeJsonPath) {
+        if (! $themeJsonPath) {
             File::deleteDirectory($tempPath);
 
             throw ThemeInstallationException::missingMetadata($tempPath);
@@ -157,13 +142,13 @@ final class ThemeService
     /**
      * Install theme from URL.
      *
-     * @param  string|null  $url  The direct download URL for the theme ZIP.
+     * @param string|null $url the direct download URL for the theme ZIP
      *
-     * @throws ThemeInstallationException If download fails.
+     * @throws ThemeInstallationException if download fails
      */
     protected function installFromUrl(?string $url): void
     {
-        if (!$url) {
+        if (! $url) {
             throw ThemeInstallationException::downloadFailed('null', 'URL is required');
         }
 
@@ -188,13 +173,13 @@ final class ThemeService
     /**
      * Install theme from Git repository.
      *
-     * @param  string|null  $repo  The Git repository URL.
+     * @param string|null $repo the Git repository URL
      *
-     * @throws ThemeInstallationException If git clone fails.
+     * @throws ThemeInstallationException if git clone fails
      */
     protected function installFromGit(?string $repo): void
     {
-        if (!$repo) {
+        if (! $repo) {
             throw ThemeInstallationException::downloadFailed('null', 'Git repository is required');
         }
 
@@ -216,13 +201,13 @@ final class ThemeService
     /**
      * Install theme from local path (symlink).
      *
-     * @param  string|null  $localPath  The absolute path to the local theme directory.
+     * @param string|null $localPath the absolute path to the local theme directory
      *
-     * @throws ThemeInstallationException If path invalid or symlink fails.
+     * @throws ThemeInstallationException if path invalid or symlink fails
      */
     protected function installFromLocal(?string $localPath): void
     {
-        if (!$localPath || !File::isDirectory($localPath)) {
+        if (! $localPath || ! File::isDirectory($localPath)) {
             throw ThemeInstallationException::invalidSource('local: path not found');
         }
 
@@ -234,7 +219,7 @@ final class ThemeService
             throw new ThemeInstallationException("Theme '{$themeName}' already exists");
         }
 
-        if (!symlink($localPath, $destination)) {
+        if (! symlink($localPath, $destination)) {
             throw ThemeInstallationException::extractionFailed($themeName, __('themer-luncher::themes.errors.installation.symlink_failed'));
         }
     }
@@ -266,14 +251,14 @@ final class ThemeService
      */
     public function backup(string $name): ThemeBackup
     {
-        if (!config('themer-luncher.backups.enabled', true)) {
+        if (! config('themer-luncher.backups.enabled', true)) {
             throw ThemeOperationNotSupportedException::make('backup');
         }
 
         /** @var Theme|null $theme */
         $theme = Theme::find($name);
 
-        if (!$theme) {
+        if (! $theme) {
             throw ThemeOperationException::notFound($name);
         }
 
@@ -282,7 +267,7 @@ final class ThemeService
 
         $backupPath = storage_path('app/'.config('themer-luncher.backups.storage_path', 'theme-backups'));
 
-        if (!File::isDirectory($backupPath)) {
+        if (! File::isDirectory($backupPath)) {
             File::makeDirectory($backupPath, 0755, true);
         }
 
@@ -291,7 +276,7 @@ final class ThemeService
         $fullPath = $backupPath.'/'.$filename;
 
         try {
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
 
             if ($zip->open($fullPath, ZipArchive::CREATE) !== true) {
                 throw ThemeOperationException::backupFailed($name, 'Cannot create ZIP file');
@@ -368,7 +353,7 @@ final class ThemeService
         $storageDir = config('themer-luncher.backups.storage_path', 'theme-backups');
         $backupPath = storage_path('app/'.$storageDir);
 
-        if (!File::isDirectory($backupPath)) {
+        if (! File::isDirectory($backupPath)) {
             return [];
         }
 
@@ -402,7 +387,7 @@ final class ThemeService
         /** @var ThemeBackup $backup */
         $backupPath = storage_path('app/'.$backup->path);
 
-        if (!file_exists($backupPath)) {
+        if (! file_exists($backupPath)) {
             throw ThemeOperationException::restoreFailed($name, __('themer-luncher::themes.errors.no_backup_found', ['name' => $name]));
         }
 
@@ -415,7 +400,7 @@ final class ThemeService
         }
 
         // Extract backup
-        $zip = new ZipArchive;
+        $zip = new ZipArchive();
         /** @var ThemeBackup $backup */
         $fullPath = storage_path('app/'.$backup->path);
 
@@ -437,44 +422,12 @@ final class ThemeService
      */
     public function delete(string $name): void
     {
-        $theme = ThemeFacade::all()->get($name);
+        Artisan::call('theme:delete', [
+            '--theme' => $name,
+            '--force' => true,
+            '--no-interaction' => true,
+        ]);
 
-        if (!$theme) {
-            throw ThemeOperationException::notFound($name);
-        }
-
-        $model = Theme::find($name);
-
-        if ($model instanceof Theme && !$model->is_removeable) {
-            if ($model->is_active) {
-                throw new ThemeOperationException(__('themer-luncher::themes.errors.active_cannot_delete'));
-            }
-            if ($name === 'default') {
-                throw new ThemeOperationException(__('themer-luncher::themes.errors.default_cannot_delete'));
-            }
-
-            throw new ThemeOperationException(__('themer-luncher::themes.errors.parent_cannot_delete'));
-        }
-
-        // Delete backups
-        /** @var \Illuminate\Database\Eloquent\Collection<int, ThemeBackup> $backups */
-        // @phpstan-ignore-line
-        $backups = ThemeBackup::query()->where('theme_name', $name)->get();
-
-        $backups->each(function (ThemeBackup $backup): void {
-            $backup->delete();
-        });
-
-        // Delete theme directory
-        // We get it from the facade directly to be sure and fallback to config path if needed
-        $themeInstance = ThemeFacade::all()->get($name);
-        $path = $themeInstance->path ?? config('themer.themes_path').'/'.$name;
-
-        if (File::isDirectory($path)) {
-            File::deleteDirectory($path);
-        }
-
-        // Clear cache
         $this->clearCache();
     }
 
@@ -483,25 +436,20 @@ final class ThemeService
      */
     public function clearCache(): void
     {
-        try {
-            // Fallback to artisan command
-            Artisan::call('theme:cache');
-        } catch (\Exception $e) {
-            // If command fails, just continue silently
-        }
+        Artisan::call('theme:clear');
+        Artisan::call('theme:cache');
     }
 
     /**
      * Publish theme assets.
      *
-     * @param  string  $name  The name of the theme to publish assets for.
+     * @param string $name the name of the theme to publish assets for
      */
     public function publishAssets(string $name): void
     {
-        $theme = ThemeFacade::all()->get($name);
-
-        if ($theme) {
-            ThemeFacade::publishAssets($theme);
-        }
+        Artisan::call('theme:publish', [
+            'theme' => $name,
+            '--no-interaction' => true,
+        ]);
     }
 }

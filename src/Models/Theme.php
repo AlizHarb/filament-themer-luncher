@@ -34,6 +34,8 @@ use Sushi\Sushi;
  * @property ThemerTheme|null $parent_theme
  * @property string $description
  * @property bool $is_removeable
+ * @property array<int, string> $screenshots
+ * @property string|null $screenshot_url
  *
  * @method static \Illuminate\Database\Eloquent\Builder query()
  * @method static \Illuminate\Database\Eloquent\Builder where(string $column, mixed $operator = null, mixed $value = null, string $boolean = 'and')
@@ -72,6 +74,7 @@ final class Theme extends Model
         'has_translations' => 'boolean',
         'has_provider' => 'boolean',
         'has_livewire' => 'boolean',
+        'screenshots' => 'array',
     ];
 
     /**
@@ -84,6 +87,7 @@ final class Theme extends Model
         'has_parent',
         'description',
         'is_removeable',
+        'screenshot_url',
     ];
 
     /**
@@ -105,6 +109,7 @@ final class Theme extends Model
         'has_translations' => 'boolean',
         'has_provider' => 'boolean',
         'has_livewire' => 'boolean',
+        'screenshots' => 'string',
     ];
 
     /**
@@ -132,6 +137,7 @@ final class Theme extends Model
                 'has_translations' => (bool) $theme->hasTranslations,
                 'has_provider' => (bool) $theme->hasProvider,
                 'has_livewire' => (bool) $theme->hasLivewire,
+                'screenshots' => json_encode($theme->screenshots ?: []) ?: '[]',
             ])
             ->values()
             ->toArray();
@@ -205,6 +211,29 @@ final class Theme extends Model
         $dependents = self::all()->filter(fn (self $theme): bool => $theme->parent === $this->name);
 
         return $dependents->isEmpty();
+    }
+
+    /**
+     * Get the URL for the first screenshot.
+     */
+    public function getScreenshotUrlAttribute(): ?string
+    {
+        $screenshot = $this->screenshots[0] ?? null;
+
+        if (! $screenshot) {
+            return null;
+        }
+
+        // If it's a full URL, return it
+        if (filter_var($screenshot, FILTER_VALIDATE_URL)) {
+            return $screenshot;
+        }
+
+        // Otherwise, it's relative to the theme's asset path
+        // We assume it's published to public/themes/{slug}/{screenshot}
+        $assetFolder = config('themer.assets.path', 'themes');
+
+        return asset($assetFolder.'/'.$this->slug.'/'.$screenshot);
     }
 
     /**

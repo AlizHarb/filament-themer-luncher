@@ -103,7 +103,7 @@ class ThemerLuncherPlugin implements Plugin
                 $widgets[] = RecentThemesWidget::class;
             }
 
-            if (!empty($widgets)) {
+            if (! empty($widgets)) {
                 $panel->widgets($widgets);
             }
         }

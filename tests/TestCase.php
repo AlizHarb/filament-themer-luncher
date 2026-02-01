@@ -29,13 +29,13 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         $themesPath = __DIR__.'/../themes';
-        if (!file_exists($themesPath)) {
+        if (! file_exists($themesPath)) {
             mkdir($themesPath, 0755, true);
         }
 
         // Create a mock theme for testing
         $mockThemePath = $themesPath.'/TestTheme';
-        if (!file_exists($mockThemePath)) {
+        if (! file_exists($mockThemePath)) {
             mkdir($mockThemePath, 0755, true);
         }
         file_put_contents($mockThemePath.'/theme.json', json_encode([

@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/alizharb/filament-themer-luncher.svg?style=flat-square)](https://packagist.org/packages/alizharb/filament-themer-luncher)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/alizharb/filament-themer-luncher/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/alizharb/filament-themer-luncher/actions?query=workflow%3ATests+branch%3Amain)
-[![GitHub PHPStan Action Status](https://img.shields.io/github/actions/workflow/status/alizharb/filament-themer-luncher/phpstan.yml?branch=main&label=phpstan&style=flat-square)](https://github.com/alizharb/filament-themer-luncher/actions?query=workflow%3APHPStan+branch%3Amain)
+[![GitHub PHPStan Action Status](https://img.shields.io/github/actions/workflow/status/alizharb/filament-themer-luncher/tests.yml?branch=main&label=phpstan&style=flat-square)](https://github.com/alizharb/filament-themer-luncher/actions?query=workflow%3ATests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/alizharb/filament-themer-luncher.svg?style=flat-square)](https://packagist.org/packages/alizharb/filament-themer-luncher)
 [![Licence](https://img.shields.io/packagist/l/alizharb/filament-themer-luncher.svg?style=flat-square)](https://packagist.org/packages/alizharb/filament-themer-luncher)
 

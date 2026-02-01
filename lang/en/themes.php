@@ -62,6 +62,9 @@ return [
         'has_provider' => [
             'label' => 'Theme Service Provider',
         ],
+        'screenshot' => [
+            'label' => 'Screenshot',
+        ],
     ],
 
     'actions' => [
@@ -89,6 +92,9 @@ return [
         'clear_cache' => [
             'label' => 'Clear Theme Cache',
         ],
+        'preview' => [
+            'label' => 'Preview',
+        ],
     ],
 
     'bulk_actions' => [
@@ -104,6 +110,7 @@ return [
         'assets_published' => 'Theme assets published successfully.',
         'deleted' => 'Theme deleted successfully.',
         'installed' => 'Theme installed successfully.',
+        'preview_started' => 'Theme preview started. You can now see the theme in action.',
         'cache_cleared' => 'Theme cache cleared successfully.',
         'bulk_assets_published' => ':count themes assets published.',
         'bulk_backed_up' => ':count themes backed up.',

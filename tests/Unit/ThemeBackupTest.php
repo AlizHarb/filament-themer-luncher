@@ -14,7 +14,7 @@ test('it can retrieve backups for a theme', function () {
 });
 
 test('it has the correct Sushi schema', function () {
-    $model = new ThemeBackup;
+    $model = new ThemeBackup();
 
     expect($model->getRows())->toBeArray();
 });

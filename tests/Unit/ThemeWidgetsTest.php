@@ -3,17 +3,15 @@
 use AlizHarb\ThemerLuncher\Filament\Widgets\RecentThemesWidget;
 use AlizHarb\ThemerLuncher\Filament\Widgets\ThemeStatsOverviewWidget;
 
-/**
+/*
  * Unit Tests for Theme Widgets
  *
  * Tests all available widgets.
  */
 describe('Theme Widgets Unit Tests', function () {
-
     describe('ThemeStatsOverviewWidget', function () {
-
         it('can instantiate stats widget', function () {
-            $widget = new ThemeStatsOverviewWidget;
+            $widget = new ThemeStatsOverviewWidget();
             expect($widget)->toBeInstanceOf(ThemeStatsOverviewWidget::class);
         });
 
@@ -22,7 +20,7 @@ describe('Theme Widgets Unit Tests', function () {
         });
 
         it('can get stats array', function () {
-            $widget = new ThemeStatsOverviewWidget;
+            $widget = new ThemeStatsOverviewWidget();
             $reflection = new ReflectionMethod($widget, 'getStats');
             $reflection->setAccessible(true);
 
@@ -34,9 +32,8 @@ describe('Theme Widgets Unit Tests', function () {
     });
 
     describe('RecentThemesWidget', function () {
-
         it('can instantiate recent themes widget', function () {
-            $widget = new RecentThemesWidget;
+            $widget = new RecentThemesWidget();
             expect($widget)->toBeInstanceOf(RecentThemesWidget::class);
         });
 

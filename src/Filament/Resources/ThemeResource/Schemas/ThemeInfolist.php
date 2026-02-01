@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AlizHarb\ThemerLuncher\Filament\Resources\ThemeResource\Schemas;
 
 use AlizHarb\ThemerLuncher\Models\Theme;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -37,6 +38,11 @@ final class ThemeInfolist
                                 ->badge()
                                 ->color('info'),
                         ]),
+                        ImageEntry::make('screenshot_url')
+                            ->label(__('themer-luncher::themes.fields.screenshot.label'))
+                            ->disk('public')
+                            ->visibility('public')
+                            ->extraImgAttributes(['class' => 'rounded-lg shadow-md max-h-64 object-cover']),
                         TextEntry::make('description')
                             ->label(__('themer-luncher::themes.fields.description.label'))
                             ->markdown(),

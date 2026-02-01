@@ -3,13 +3,12 @@
 use AlizHarb\ThemerLuncher\Filament\Resources\ThemeResource\Tables\ThemeTable;
 use Filament\Tables\Table;
 
-/**
+/*
  * Unit Tests for ThemeTable
  *
  * Tests table configuration and structure.
  */
 describe('ThemeTable Unit Tests', function () {
-
     it('can configure table', function () {
         $table = \Mockery::mock(Table::class);
         $table->shouldReceive('columns')->andReturnSelf();

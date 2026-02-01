@@ -19,7 +19,7 @@ final class ThemeBackupPolicy
      */
     public function viewAny(?Authenticatable $user): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -39,7 +39,7 @@ final class ThemeBackupPolicy
      */
     public function delete(?Authenticatable $user, ThemeBackup $backup): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
@@ -59,7 +59,7 @@ final class ThemeBackupPolicy
      */
     public function restore(?Authenticatable $user, ThemeBackup $backup): bool
     {
-        if (!(bool) config('themer-luncher.authorization.enabled', true)) {
+        if (! (bool) config('themer-luncher.authorization.enabled', true)) {
             return true;
         }
 
