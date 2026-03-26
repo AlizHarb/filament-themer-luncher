@@ -61,6 +61,9 @@ return [
         'has_provider' => [
             'label' => 'دابینکەری خزمەتگوزاری ڕووکار',
         ],
+        'screenshot' => [
+            'label' => 'وێنەی پیشاندانی ڕووکار',
+        ],
     ],
     'actions' => [
         'activate' => [
